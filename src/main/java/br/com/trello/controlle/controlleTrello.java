@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.trello.entity.Authentication;
 import br.com.trello.services.TrelloServices;
 import br.com.trello.vo.AuthenticationVO;
+import br.com.trello.vo.BoardTrelloVO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -48,12 +49,12 @@ public class controlleTrello {
 //	    }
 //
 //
-//	    @GetMapping("/episode/{id}")
-//	    @ResponseStatus(HttpStatus.OK)
-//	    public Mono<EpisodeResponse> getEpisodeById(@PathVariable String id) {
-//	        return rickAndMortyClient.findAEpisodeById(id);
-//
-//	    }
+	    @GetMapping("/trello/{id}")
+	    @ResponseStatus(HttpStatus.OK)
+	    public Mono<BoardTrelloVO> findALocationById(@PathVariable String id) {
+	        return services.findALocationById(id);
+
+	    }
 
 
 	    @GetMapping("/trello")

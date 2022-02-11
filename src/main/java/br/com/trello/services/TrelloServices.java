@@ -14,6 +14,7 @@ import br.com.trello.conf.confTrello;
 import br.com.trello.entity.Authentication;
 import br.com.trello.repository.RepositoryTrello;
 import br.com.trello.vo.AuthenticationVO;
+import br.com.trello.vo.BoardTrelloVO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -30,36 +31,40 @@ public class TrelloServices implements confTrello{
 	   
 	   
 	  public TrelloServices(WebClient.Builder builder, RepositoryTrello repositoryTrello) {
-	        webClient = builder.baseUrl("https://api.trello.com/1/members/me/boards?").build();
+	        webClient = builder.baseUrl("https://api.trello.com/1/").build();
 			this.repositoryTrello = repositoryTrello;
 
 	  }
-
+	    public Mono<BoardTrelloVO> findALocationById(String id) {
+	   
+	        return webClient
+	                .get()
+	                .uri("/boards/"+id+"?key="+confTrello.key+"&token="+confTrello.Token)
+	                .accept(APPLICATION_JSON)
+	                .retrieve()
+	                .onStatus(HttpStatus::is4xxClientError,
+	                        error -> Mono.error(new RuntimeException("verifique os parâmetros informados")))
+	                .bodyToMono(BoardTrelloVO.class);
+	    }
 
 	  
     public Flux<AuthenticationVO> ListTrello() throws IOException {
-    	Flux<AuthenticationVO> t =webClient
+    	Flux<AuthenticationVO> client =webClient
                 .get()
-                .uri("?key="+confTrello.key+"&token="+confTrello.Token)
+                .uri("/members/me/boards/?key="+confTrello.key+"&token="+confTrello.Token)
                 .accept(APPLICATION_JSON)
                 .retrieve()
                 .onStatus(HttpStatus::is4xxClientError,
                         error -> Mono.error(new RuntimeException("verifique os parâmetros informados")))
                 .bodyToFlux(AuthenticationVO.class);
     	
-    	List<AuthenticationVO> list1 = t.collectList().block();
+    	List<AuthenticationVO> list1 = client.collectList().block();
     	for(AuthenticationVO obj: list1) {
-    		System.out.println(obj.getName());
-    		System.out.println(obj.getId());
     		AuthenticationVO DesvoRetorno = AuthenticationVO.create(repositoryTrello.save(Authentication.create(obj)));
     	}
     	
-    	   return t;
-
-        	
+    	   return client;
 
     }
     
-
- 
 }
