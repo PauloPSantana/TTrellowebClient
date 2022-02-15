@@ -32,23 +32,6 @@ public class controlleTrello {
 	private TrelloServices services;
 	
 
-//
-//	    @GetMapping("/character/{id}")
-//	    @ResponseStatus(HttpStatus.OK)
-//	    public Mono<Authentication> getCharacterById(@PathVariable String id) {
-//	        return services.findACharacterById(id);
-//
-//	    }
-//
-//
-//	    @GetMapping("/location/{id}")
-//	    @ResponseStatus(HttpStatus.OK)
-//	    public Mono<LocationResponse> getLocationById(@PathVariable String id) {
-//	        return rickAndMortyClient.findALocationById(id);
-//
-//	    }
-//
-//
 	    @GetMapping("/trello/{id}")
 	    @ResponseStatus(HttpStatus.OK)
 	    public Mono<BoardTrelloVO> findALocationById(@PathVariable String id) {
